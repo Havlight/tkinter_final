@@ -43,8 +43,11 @@ def parse_schedule(schedule_str):
             times = []
             for time_range in parts[1:]:
                 # 按照 ' 到 ' 拆分时间段，并去掉多余的空格
-                start, end = [t.strip() for t in time_range.split('到')]
-                times.extend([start, end])
+                if '休息' in time_range:
+                    times.extend(["休息"])
+                else:
+                    start, end = [t.strip() for t in time_range.split('到')]
+                    times.extend([start, end])
 
             # 将时间段列表添加到字典中
             schedule_dict[day_name] = times

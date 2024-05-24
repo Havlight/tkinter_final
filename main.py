@@ -1,10 +1,12 @@
 from attr import dataclass
 from playwright.sync_api import sync_playwright, Page
 from utils import *
+import geocoder
 
-search_for = '焼肉スマイル（燒肉Smile）彰化中山店'
+search_for = '滷肉飯'
 total = 10
 sort_index = 2
+
 
 def perform_search():
     with sync_playwright() as p:
@@ -113,6 +115,40 @@ def get_comments():
         return results
 
 
-# print(perform_search()[0].__str__())
-print(get_comments())
+def get_distance():
+    with sync_playwright() as p:
+        ip = geocoder.ip("me")
+        # "C:\Program Files\Google\Chrome\Application\chrome.exe"
+        browser = p.chromium.launch(headless=False)
+        context = browser.new_context(locale='zh-tw', geolocation={"longitude": ip.latlng[1], "latitude": ip.latlng[0]},
+                                      permissions=["geolocation"])
+        page = context.new_page()
 
+        page.goto('https://www.google.com/maps/')
+        page.wait_for_timeout(5000)
+
+        # enter search entry
+        page.locator('//input[@id="searchboxinput"]').fill(search_for)
+        page.wait_for_timeout(3000)
+
+        page.keyboard.press("Enter")
+        page.wait_for_timeout(5000)
+
+        path_btn_xpath = '//button[contains(@data-value,"規劃路線")]'
+        path_start_input_xpath = '//input[contains(@class,"tactile-searchbox-input") and contains(@aria-label,"起點")]'
+        top_row_xpath = '//div[contains(@class,"MJtgzc")]/div[contains(@role,"radiogroup")]'
+        times_xpath = '//img[@data-tooltip and @data-tooltip]/following-sibling::*[1]'
+
+        page.locator(path_btn_xpath).click()
+        page.wait_for_timeout(2000)
+        page.locator(path_start_input_xpath).fill("你的位置")
+        print(page.locator(top_row_xpath).inner_text())
+
+
+        page.wait_for_timeout(3000)
+
+
+print(perform_search())
+# print(get_comments())
+
+# get_distance()
