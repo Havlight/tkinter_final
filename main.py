@@ -3,7 +3,7 @@ from playwright.sync_api import sync_playwright, Page
 from utils import *
 import geocoder
 
-search_for = '滷肉飯'
+search_for = '郭媽媽滷肉飯 500彰化縣彰化市長安街74號'
 total = 10
 sort_index = 2
 
@@ -137,18 +137,17 @@ def get_distance():
         path_btn_xpath = '//button[contains(@data-value,"規劃路線")]'
         path_start_input_xpath = '//input[contains(@class,"tactile-searchbox-input") and contains(@aria-label,"起點")]'
         top_row_xpath = '//div[contains(@class,"MJtgzc")]/div[contains(@role,"radiogroup")]'
-        times_xpath = '//img[@data-tooltip and @data-tooltip]/following-sibling::*[1]'
-
+        # times_xpath = '//img[@data-tooltip and @data-tooltip]/following-sibling::*[1]'
+        travel_boxes = '//div[@data-travel_mode]'
         page.locator(path_btn_xpath).click()
         page.wait_for_timeout(2000)
         page.locator(path_start_input_xpath).fill("你的位置")
-        print(page.locator(top_row_xpath).inner_text())
+        results = []
+        for i in page.locator(travel_boxes).all()[1:]:
+            results.append(i.inner_text())
+        return results
 
-
-        page.wait_for_timeout(3000)
-
-
-print(perform_search())
+# print(perform_search())
 # print(get_comments())
 
-# get_distance()
+print(get_distance())
