@@ -2,8 +2,8 @@ from attr import dataclass
 from playwright.sync_api import sync_playwright, Page
 from utils import *
 
-search_for = '蕭記爌肉飯'
-total = 50
+search_for = '蚯蚓龍山麵線糊'
+total = 10
 sort_index = 2
 
 def perform_search():
@@ -113,5 +113,6 @@ def get_comments():
         return results
 
 
+# print(perform_search()[0].__str__())
 print(get_comments())
 

@@ -9,7 +9,7 @@ class Business:
     name: str = ''
     address: str = ''
     category: str = ''
-    opening_hours: str = ''
+    opening_hours: dict = {}
     phone_number: str = ''
     reviews_count: str = ''
     rating: str = ''
@@ -17,9 +17,42 @@ class Business:
     longitude: float = None
 
     def __str__(self):
-        return "name:" + self.name + " address:" + self.address + " cate:" + self.category + " opening:" \
-               + self.opening_hours + " phone:" + self.phone_number + " reviews_count:" + self.reviews_count \
-               + " rating:" + self.rating
+        return "name:" + self.name + "\naddress:" + self.address + "\ncate:" + self.category + "\nopening:" \
+               + str(self.opening_hours) + "\nphone:" + self.phone_number + "\nreviews_count:" + self.reviews_count \
+               + "\nrating:" + self.rating + "\nlatitude:" + str(self.latitude) + " longitude:" + str(self.longitude)
+
+
+def parse_schedule(schedule_str):
+    try:
+        # 去掉结尾的点号和多余的空格
+        schedule_str = schedule_str.strip().strip('。')
+
+        # 按照分号拆分每一天的时间段
+        days = schedule_str.split(';')
+
+        # 创建一个空字典来存储结果
+        schedule_dict = {}
+
+        # 处理每一天的时间段
+        for day in days:
+            # 按照逗号拆分每个部分
+            parts = day.split('、')
+            day_name = parts[0].strip()  # 获取星期几
+
+            # 获取时间段
+            times = []
+            for time_range in parts[1:]:
+                # 按照 ' 到 ' 拆分时间段，并去掉多余的空格
+                start, end = [t.strip() for t in time_range.split('到')]
+                times.extend([start, end])
+
+            # 将时间段列表添加到字典中
+            schedule_dict[day_name] = times
+
+        return schedule_dict
+    except Exception as e:
+        print(e)
+        return {}
 
 
 def single_search(page: Page):
@@ -50,7 +83,8 @@ def single_search(page: Page):
     if page.locator(Phone_Number).count() > 0:
         bs.phone_number = page.locator(Phone_Number).get_attribute('aria-label')
     if page.locator(Opening_Hours).count() > 0:
-        bs.opening_hours = page.locator(Opening_Hours).get_attribute('aria-label').replace('隱藏本週營業時間', '')
+        bs.opening_hours = parse_schedule(
+            page.locator(Opening_Hours).get_attribute('aria-label').replace('隱藏本週營業時間', ''))
 
     bs.latitude, bs.longitude = extract_coordinates_from_url(page.url)
 
@@ -140,7 +174,8 @@ def multiple_search(page: Page, total):
         if page.locator(Phone_Number).count() > 0:
             bs.phone_number = page.locator(Phone_Number).get_attribute('aria-label')
         if page.locator(Opening_Hours).count() > 0:
-            bs.opening_hours = page.locator(Opening_Hours).get_attribute('aria-label').replace('隱藏本週營業時間', '')
+            bs.opening_hours = parse_schedule(
+                page.locator(Opening_Hours).get_attribute('aria-label').replace('隱藏本週營業時間', ''))
 
         bs.latitude, bs.longitude = extract_coordinates_from_url(page.url)
 
