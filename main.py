@@ -2,7 +2,7 @@ from attr import dataclass
 from playwright.sync_api import sync_playwright, Page
 from utils import *
 
-search_for = '蚯蚓龍山麵線糊'
+search_for = '焼肉スマイル（燒肉Smile）彰化中山店'
 total = 10
 sort_index = 2
 
