@@ -13,6 +13,7 @@ class Business:
     phone_number: str = ''
     reviews_count: str = ''
     rating: str = ''
+    status: str = ''
     latitude: float = None
     longitude: float = None
 
@@ -68,6 +69,7 @@ def single_search(page: Page):
     Phone_Number = '//button[contains(@aria-label,"電話號碼") and @class="CsEnBe"]'
     Address = '//button[contains(@aria-label,"地址: ")]'
     Opening_Hours = '//div[contains(@aria-label, "隱藏本週營業時間")]'
+    status_xpath = '//div[@data-hide-tooltip-on-mouse-move and @role]//span[contains(text(),"已打烊")]'
     # not used
     Photos = '//div[contains(@class, "RZ66Rb FgCUCc")]/button[contains(@class,"aoRNLd kn2E5e NMjTrf lvtCsd ")]/img'
 
@@ -81,6 +83,10 @@ def single_search(page: Page):
         bs.reviews_count = page.locator(Review_nums).inner_text()
     if page.locator(Category).count() > 0:
         bs.category = page.locator(Category).inner_text()
+    if page.locator(status_xpath).count() > 0:
+        bs.status = "已打烊"
+    else:
+        bs.status = "營業中"
     if page.locator(Address).count() > 0:
         bs.address = page.locator(Address).get_attribute('aria-label')
     if page.locator(Phone_Number).count() > 0:
@@ -159,6 +165,7 @@ def multiple_search(page: Page, total):
         Phone_Number = '//button[contains(@aria-label,"電話號碼") and @class="CsEnBe"]'
         Address = '//button[contains(@aria-label,"地址: ")]'
         Opening_Hours = '//div[contains(@aria-label, "隱藏本週營業時間")]'
+        status_xpath = '//div[@data-hide-tooltip-on-mouse-move and @role]//span[contains(text(),"已打烊")]'
         # not used
         Photos = '//div[contains(@class, "RZ66Rb FgCUCc")]/button[contains(@class,"aoRNLd kn2E5e NMjTrf lvtCsd ")]/img'
 
@@ -172,6 +179,10 @@ def multiple_search(page: Page, total):
             bs.reviews_count = page.locator(Review_nums).inner_text()
         if page.locator(Category).count() > 0:
             bs.category = page.locator(Category).inner_text()
+        if page.locator(status_xpath).count() > 0:
+            bs.status = "已打烊"
+        else:
+            bs.status = "營業中"
         if page.locator(Address).count() > 0:
             bs.address = page.locator(Address).get_attribute('aria-label')
         if page.locator(Phone_Number).count() > 0:

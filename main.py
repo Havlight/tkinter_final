@@ -3,7 +3,7 @@ from playwright.sync_api import sync_playwright, Page
 from utils import *
 import geocoder
 
-search_for = '郭媽媽滷肉飯 500彰化縣彰化市長安街74號'
+search_for = '焢肉飯'
 total = 10
 sort_index = 2
 
@@ -28,7 +28,7 @@ def perform_search():
         # for scrolling
         # check if single or multiple results
         try:
-            page.hover('//a[contains(@href, "https://www.google.com/maps/place")]')
+            page.hover('//a[contains(@href, "https://www.google.com/maps/place")]', timeout=2000)
             results = multiple_search(page, total)
         except Exception as e:
             results = single_search(page)
@@ -147,7 +147,8 @@ def get_distance():
             results.append(i.inner_text())
         return results
 
-# print(perform_search())
+
+print(perform_search())
 # print(get_comments())
 
-print(get_distance())
+# print(get_distance())
