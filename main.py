@@ -3,12 +3,12 @@ from playwright.sync_api import sync_playwright, Page
 from utils import *
 import geocoder
 
-search_for = '焢肉飯'
-total = 10
+# search_for = '焢肉飯'
+# total = 10
 sort_index = 2
 
 
-def perform_search():
+def perform_search(search_for, total):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         context = browser.new_context(locale='zh-tw')
@@ -35,7 +35,7 @@ def perform_search():
         return results
 
 
-def get_comments():
+def get_comments(search_for, total):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         context = browser.new_context(locale='zh-tw')
@@ -115,7 +115,7 @@ def get_comments():
         return results
 
 
-def get_distance():
+def get_distance(search_for, total):
     with sync_playwright() as p:
         ip = geocoder.ip("me")
         # "C:\Program Files\Google\Chrome\Application\chrome.exe"
@@ -148,7 +148,7 @@ def get_distance():
         return results
 
 
-print(perform_search())
+# print(perform_search())
 # print(get_comments())
 
 # print(get_distance())
