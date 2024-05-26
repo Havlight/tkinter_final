@@ -2,10 +2,10 @@ from attr import dataclass
 from playwright.sync_api import sync_playwright, Page
 from utils import *
 import geocoder
-
-# search_for = '焢肉飯'
-# total = 10
-sort_index = 2
+import time
+search_for = '品蔚手做麵'
+total = 3
+#sort_index = 2
 
 
 def perform_search(search_for, total):
@@ -56,7 +56,7 @@ def get_comments(search_for, total):
         cmt_btn_xpath = '//button[contains(@aria-label,"評論") and @role="tab"]'
         cmt_xpaths = '//div[contains(@class,"MyEned")]'
         sorting_btn_xpath = '//button[contains(@aria-label,"排序評論") and contains(@data-value,"排序")]'
-        sortingway_xpath = f'//div[contains(@id,"action-menu")]/div[contains(@data-index,"{sort_index}")]'
+        #sortingway_xpath = f'//div[contains(@id,"action-menu")]/div[contains(@data-index,"{sort_index}")]'
         # click comment btn
         page.locator(cmt_btn_xpath).click()
         # select sorting way
@@ -136,19 +136,18 @@ def get_distance(search_for, total):
 
         path_btn_xpath = '//button[contains(@data-value,"規劃路線")]'
         path_start_input_xpath = '//input[contains(@class,"tactile-searchbox-input") and contains(@aria-label,"起點")]'
-        top_row_xpath = '//div[contains(@class,"MJtgzc")]/div[contains(@role,"radiogroup")]'
+        # top_row_xpath = '//div[contains(@class,"MJtgzc")]/div[contains(@role,"radiogroup")]'
         # times_xpath = '//img[@data-tooltip and @data-tooltip]/following-sibling::*[1]'
         travel_boxes = '//div[@data-travel_mode]'
         page.locator(path_btn_xpath).click()
         page.wait_for_timeout(2000)
+
         page.locator(path_start_input_xpath).fill("你的位置")
-        results = []
-        for i in page.locator(travel_boxes).all()[1:]:
-            results.append(i.inner_text())
-        return results
+        path_detail_xpath = '//button[contains(@class, "TIQqpf") and contains(@class, "fontTitleSmall") and contains(@aria-labelledby, "section-directions-trip-details-msg-0")]'
+        page.locator(path_detail_xpath).click()
+        return
 
+#print(perform_search(search_for, total))
+#print(get_comments(search_for, total))
 
-# print(perform_search())
-# print(get_comments())
-
-# print(get_distance())
+#print(get_distance(search_for, total))
